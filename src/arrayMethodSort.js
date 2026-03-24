@@ -22,16 +22,41 @@ function applyCustomSort() {
         return 0;
       });
 
-    for (let i = 0; i < this.length - 1; i++) {
-      for (let j = 0; j < this.length - 1 - i; j++) {
-        if (compare(this[j], this[j + 1]) > 0) {
-          const currentValue = this[j];
+    const swap = (leftIndex, rightIndex) => {
+      const temp = this[leftIndex];
 
-          this[j] = this[j + 1];
-          this[j + 1] = currentValue;
+      this[leftIndex] = this[rightIndex];
+      this[rightIndex] = temp;
+    };
+
+    const partition = (start, end) => {
+      const pivot = this[end];
+      let smallerElementIndex = start;
+
+      for (let currentIndex = start; currentIndex < end; currentIndex++) {
+        if (compare(this[currentIndex], pivot) <= 0) {
+          swap(smallerElementIndex, currentIndex);
+          smallerElementIndex++;
         }
       }
-    }
+
+      swap(smallerElementIndex, end);
+
+      return smallerElementIndex;
+    };
+
+    const quickSort = (start, end) => {
+      if (start >= end) {
+        return;
+      }
+
+      const pivotIndex = partition(start, end);
+
+      quickSort(start, pivotIndex - 1);
+      quickSort(pivotIndex + 1, end);
+    };
+
+    quickSort(0, this.length - 1);
 
     return this;
   };
